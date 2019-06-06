@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="generator"
+        content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+        <meta http-equiv="Content-Type" content="text/html;" charset="gb2312" />
+        <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+        <title>图片识别应用</title>
+        <script>
+            $(document).ready(function(){
+                $("#image_file").change(function(){
+                    var file = $(this)[0].files[0];
+                    $("#img").attr("src", URL.createObjectURL(file));
+                    }); 
+                $("button#button_1").click(function(){
+                    var formData = new FormData($("#upload_form")[0]);
+                    $.ajax({
+                        url: "/predict_image",
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(return_data){
+                            $("#image_className").text("图片中物体的种类名称：" + return_data["predict_className"])
+                            },
+                        error: function(return_data){
+                            alert("上传失败!")
+                            }
+                        })   
+                    });
+                }); 
+        </script>
+    </head>
+    
+    <body>
+        <center >
+            <font size="10" face="微软雅黑">
+                图像识别应用
+          </font>
+            <br>
+            <br/>
+            <form id="upload_form" enctype="multipart/form-data">
+                <input type="file" name="input_image" id="image_file" class="btn btn-default" style="width:20%"/>
+            </form>
+            <br/>
+            <div  class="center-block">
+                <img src="" id="img" />
+            </div>
+            <br/>
+            <button id="button_1" class="btn btn-success" style="width:20%">上传图片并预测</button>
+            <br/>
+            <br/>
+            <font size="5" face="微软雅黑">
+                <p id="image_className"></p>
+            </font>
+        </center>
+    </body>
+</html>
